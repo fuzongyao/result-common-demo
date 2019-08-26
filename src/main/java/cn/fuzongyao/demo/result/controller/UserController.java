@@ -52,7 +52,7 @@ public class UserController {
         return ObjectResult.succeed(Boolean.TRUE);
     }
 
-    @GetMapping(value = "login")
+    @PostMapping(value = "login")
     public ObjectResult<Boolean> login(@RequestParam String phone, @RequestParam String password) {
         // 先做参数校验，手机号和密码都不能为空
         if (StringUtils.isAnyBlank(phone, password)) {

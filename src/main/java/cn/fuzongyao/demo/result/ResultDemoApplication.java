@@ -11,8 +11,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @since 1.0
  */
 @SpringBootApplication
-public class ResultApplication {
+public class ResultDemoApplication {
     public static void main(String[] args) {
-        SpringApplication.run(ResultApplication.class, args);
+        SpringApplication.run(ResultDemoApplication.class, args);
     }
 }

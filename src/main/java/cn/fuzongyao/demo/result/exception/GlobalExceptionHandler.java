@@ -1,5 +1,7 @@
 package cn.fuzongyao.demo.result.exception;
 
+import cn.fuzongyao.result.exception.BizException;
+import cn.fuzongyao.result.result.BaseResult;
 import cn.fuzongyao.result.result.GlobalCodeMessageEnum;
 import cn.fuzongyao.result.result.ObjectResult;
 import org.slf4j.Logger;
@@ -27,30 +29,39 @@ public class GlobalExceptionHandler {
     private final static Logger LOGGER = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     /**
-     * 业务异全局处理, 未处理的所有异常在此拦截并处理
+     * 业务异常全局处理, 未处理的所有异常在此拦截并处理
      *
      * @param e 异常对象
      * @return
      */
     @ExceptionHandler(value = Exception.class)
     public ObjectResult<String> exceptionHandler(Exception e) {
-        LOGGER.error("", e);
-        ObjectResult<String> result = new ObjectResult<String>(GlobalCodeMessageEnum.ERROR).setData(e.getMessage());
-        return result;
+        LOGGER.error("未知错误", e);
+        return new ObjectResult<String>(GlobalCodeMessageEnum.ERROR).setData(e.getMessage());
+    }
+
+    /**
+     * 业务异常全局处理, 未处理的所有异常在此拦截并处理
+     *
+     * @param e 异常对象
+     * @return
+     */
+    @ExceptionHandler(value = BizException.class)
+    public BaseResult bizExceptionHandler(BizException e) {
+        LOGGER.error("发生业务异常", e);
+        return new BaseResult(e);
     }
 
     @ExceptionHandler({BindException.class})
     public ObjectResult<String> bindExceptionHandler(BindException e) {
         LOGGER.error("发生参数类型不一致异常", e);
-        ObjectResult<String> result = new ObjectResult<String>(GlobalCodeMessageEnum.PARAMENTER_TYPE_INCONFORMITY).setData(e.getMessage());
-        return result;
+        return new ObjectResult<String>(GlobalCodeMessageEnum.PARAMENTER_TYPE_INCONFORMITY).setData(e.getMessage());
     }
 
     @ExceptionHandler({MethodArgumentTypeMismatchException.class})
     public ObjectResult<String> paramenterExceptionHandler(MethodArgumentTypeMismatchException e) {
         LOGGER.error("发生参数类型不一致异常", e);
-        ObjectResult<String> result = new ObjectResult<String>(GlobalCodeMessageEnum.PARAMENTER_TYPE_INCONFORMITY).setData(e.getMessage());
-        return result;
+        return new ObjectResult<String>(GlobalCodeMessageEnum.PARAMENTER_TYPE_INCONFORMITY).setData(e.getMessage());
     }
 
     @ExceptionHandler({MethodArgumentNotValidException.class})
@@ -62,14 +73,12 @@ public class GlobalExceptionHandler {
             tips = errors.get(0).getDefaultMessage();
         }
 
-        ObjectResult<String> result = new ObjectResult<String>(GlobalCodeMessageEnum.PARAMENTER_NOT_VALID).setData(tips);
-        return result;
+        return new ObjectResult<String>(GlobalCodeMessageEnum.PARAMENTER_NOT_VALID).setData(tips);
     }
 
     @ExceptionHandler({MissingServletRequestParameterException.class, HttpMessageNotReadableException.class})
     public ObjectResult<String> paramenterExceptionHandler(Exception e) {
         LOGGER.error("发生参数不合法异常", e);
-        ObjectResult<String> result = new ObjectResult<String>(GlobalCodeMessageEnum.PARAMENTER_NOT_VALID).setData(e.getMessage());
-        return result;
+        return new ObjectResult<String>(GlobalCodeMessageEnum.PARAMENTER_NOT_VALID).setData(e.getMessage());
     }
 }
